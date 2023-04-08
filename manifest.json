@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "U Plan",
+  "version": "1.0",
+  "description": "Add the course comments to MyPlan",
+
+  "icons": {
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": [
+        "https://myplan.uw.edu/course/*"
+      ],
+	  "run_at": "document_end"
+    }
+  ]
+}
