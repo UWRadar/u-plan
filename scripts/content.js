@@ -1,13 +1,17 @@
-function injectHuaClassmate() {
+function inject() {
 	const newIframe = document.createElement("iframe");
-	newIframe.src = "https://uwclassmate.com/";
+	const courseInfo = document.querySelector("h1");
+	if (!courseInfo) {
+		setTimeout(inject, 1000);
+		return;
+	}
+	const courseName = courseInfo.textContent.split(" ").slice(0, 2);
+	const courseNum = courseName.join("");
+	newIframe.src = "https://uwclassmate.com/CourseDetail/" + courseNum;
 	newIframe.style.height = "500px";
 	newIframe.style.width = "100%";
 	const cdpCourseDetails = document.querySelector(".cdpCourseDetails");
-	if (!cdpCourseDetails) {
-		setTimeout(injectHuaClassmate, 1000);
-	}
 	cdpCourseDetails.appendChild(newIframe);
 }
 
-setTimeout(injectHuaClassmate, 1000);
+setTimeout(inject, 1000);
