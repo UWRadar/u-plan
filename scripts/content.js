@@ -63,6 +63,8 @@ setInterval(() => {
 	const courseId = hashUrl.searchParams.get("id");
 	if (courseId !== lastCourseId) {
 		lastCourseId = courseId;
-		inject();
+		if (courseId) {
+			inject();
+		}
 	}
 }, 1000);
