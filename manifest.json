@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "U Plan by 华大课友",
-  "version": "1.1",
+  "version": "1.2",
   "description": "在 UW 的 MyPlan 上显示学生对当前课程的评价。",
   "icons": {
     "16": "images/icon-16.png",

@@ -9,12 +9,23 @@ async function inject() {
 	) {
 		return;
 	}
-	const courseName = courseInfo.textContent.split(" ").slice(0, 2);
-	if (!courseName[1] || isNaN(parseInt(courseName[1]))) {
-		// not a valid course number
+	// Split the course name based on spaces
+	const courseInfoArray = courseInfo.textContent.split(" ");
+
+	// Find the last element that is the course number
+	const courseNumIndex = courseInfoArray.findIndex((part) => !isNaN(parseInt(part)));
+
+	// If there's no valid course number, exit the function
+	if (courseNumIndex === -1) {
 		return;
 	}
-	const courseNum = courseName.join("");
+
+	// Join everything before the course number as the course abbreviation (e.g., "GEN ST")
+	const courseName = courseInfoArray.slice(0, courseNumIndex).join(" ");
+
+	// Join the course abbreviation and number (e.g., "GENST199")
+	const courseNum = `${courseInfoArray.slice(0, courseNumIndex).join("")}${courseInfoArray[courseNumIndex]}`;
+	
 	const iframeId = "u-plan";
 	const existingIframe = document.getElementById(iframeId);
 	const iframeUrl = `https://uwclassmate.com/CourseDetail/${courseNum}`;
