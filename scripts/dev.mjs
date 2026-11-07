@@ -28,9 +28,10 @@ const server = createServer(async (req, res) => {
       res.end(JSON.stringify(await lookup(query.name, query.campus))); return;
     }
     const relative = decodeURIComponent(url.pathname === "/" ? "/demo/" : url.pathname);
-    if (!relative.startsWith("/demo/") && !relative.startsWith("/dist-dev/") && !relative.startsWith("/images/")) { res.writeHead(404).end("Not found"); return; }
+    const scope = ["demo", "dist-dev", "images"].find(folder => relative.startsWith(`/${folder}/`));
+    if (!scope) { res.writeHead(404).end("Not found"); return; }
     const full = path.resolve(root, "." + relative);
-    if (!full.startsWith(path.resolve(root) + path.sep)) { res.writeHead(403).end(); return; }
+    if (!full.startsWith(path.resolve(root, scope) + path.sep)) { res.writeHead(403).end(); return; }
     const file = (await stat(full)).isDirectory() ? path.join(full, "index.html") : full;
     res.writeHead(200, { "Content-Type": types[path.extname(file)] ?? "application/octet-stream", "Cache-Control": "no-store", "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; frame-src 'self' http://localhost:3010 http://127.0.0.1:3010; object-src 'none'; base-uri 'self'" });
     res.end(await readFile(file));
