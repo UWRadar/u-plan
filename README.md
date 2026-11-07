@@ -2,6 +2,23 @@
 
 Local prototype combining the existing 华大课友 course-review iframe with inline professor ratings on UW MyPlan. Inspired by the interaction in [RateMyProf Assistant for UW MyPlan](https://chromewebstore.google.com/detail/ratemyprof-assistant-for/ofkeokbllkoiceaekhaljfjbjegahaej). This is an independent implementation; the referenced extension is not a dependency.
 
+## Group testing branch
+
+The complete U Plan 2.0 candidate is on **`feature/u-plan-2.0-professor-ratings`** in [UWRadar/u-plan](https://github.com/UWRadar/u-plan/tree/feature/u-plan-2.0-professor-ratings). It includes the updated dependencies, source, MyPlan integration, opt-in professor ratings, tests, local demo and store packager. This branch is for team testing; it has not been published to the Chrome Web Store.
+
+```sh
+git clone --branch feature/u-plan-2.0-professor-ratings https://github.com/UWRadar/u-plan.git
+cd u-plan
+bun install --frozen-lockfile
+bun run typecheck
+bun run test
+bun run build
+```
+
+To test in Chrome, open `chrome://extensions`, turn on Developer mode, click **Load unpacked**, and select the generated **`dist/`** folder. Disable the installed store version during this test to avoid duplicate widgets. Open a real UW MyPlan course-detail page, check the course-review and professor tabs, and try navigation to another course. If MyPlan shows no instructor, the extension should not invent one. Live RMP lookups are off until enabled in extension options and their optional permission is accepted.
+
+For a test without MyPlan sign-in, run `bun run dev` and open **http://127.0.0.1:3011/demo/**; that page uses clearly labeled fictional records. Report the course URL/code, browser version, expected behavior and observed behavior in a GitHub issue. The existing store release and candidate submission steps are documented below.
+
 ## Try it locally
 
 Use Node 22.14+ and Bun 1.4.4 (pinned in `package.json`).
