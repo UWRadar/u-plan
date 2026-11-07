@@ -1,0 +1,25 @@
+{
+  "name": "u-plan",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "UW Classmates course reviews and professor-rating prototype for MyPlan",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "packageManager": "bun@1.4.4",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "package:store": "node scripts/package-store.mjs",
+    "dev": "node --import tsx scripts/dev.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.3.7",
+    "@types/node": "26.6.6",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}
