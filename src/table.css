@@ -1,0 +1,8 @@
+/* Suppress just the seam between the native Instructor cell and U Plan's cell. */
+.cdpCourseDetails :is(th, td):has(+ [data-u-plan-rating-cell]) {
+  border-right-style: hidden !important;
+}
+
+.cdpCourseDetails [data-u-plan-rating-cell] {
+  border-left-style: hidden !important;
+}
