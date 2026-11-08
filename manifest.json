@@ -17,6 +17,7 @@
   },
   "content_scripts": [
     {
+      "css": ["scripts/table.css"],
       "js": [
         "scripts/content.js"
       ],

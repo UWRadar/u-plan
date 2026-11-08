@@ -1,3 +1,60 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>U Plan 设置</title><link rel="stylesheet" href="options.css"></head>
-<body><main><p class="eyebrow">华大课友 · U PLAN</p><h1>教授评分设置</h1><p>课程课评与教授评分分别标注来源。无需提供 NetID、密码或课表。</p><label for="campus">UW 校区 <select id="campus"><option value="seattle">UW Seattle</option><option value="bothell">UW Bothell</option><option value="tacoma">UW Tacoma</option></select></label><p>按所选校区匹配教授，避免同名教师配错学校。</p><label><input type="checkbox" id="live-ratings">启用 RMP 实时查询</label><p>启用后，打开 MyPlan 课程页面或点击教授按钮时，插件会将该教授姓名和 UW 校区发送给 Rate My Professors。结果缓存在本机；官网服务器不参与请求。</p><p>这是可选的实验性接入。RMP 不可用时仍可通过按钮打开原站，评分以原站为准。</p><button id="clear-cache" type="button">清除本机评分缓存</button><p id="status" role="status"></p></main><script src="scripts/options.js" defer></script></body></html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>U Plan 设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <img src="images/icon-48.png" width="48" height="48" alt="">
+      <div>
+        <p class="wordmark">华大课友 · U Plan</p>
+        <h1 data-copy="heading">教授评分设置</h1>
+      </div>
+      <p class="intro" data-copy="intro">课程课评与教授评分分别标注来源。无需提供 NetID、密码或课表。</p>
+    </header>
+
+    <section class="card" aria-labelledby="display-heading">
+      <h2 id="display-heading" data-copy="display">显示与校区</h2>
+      <div class="setting">
+        <label for="language" data-copy="language">显示语言</label>
+        <select id="language">
+          <option value="zh" lang="zh">中文</option>
+          <option value="en" lang="en">English</option>
+        </select>
+      </div>
+      <div class="setting">
+        <div>
+          <label for="campus" data-copy="campus">UW 校区</label>
+          <p id="campus-help" class="hint" data-copy="campusHelp">按所选校区匹配教授，避免同名教师配错学校。</p>
+        </div>
+        <select id="campus" aria-describedby="campus-help">
+          <option value="seattle">UW Seattle</option>
+          <option value="bothell">UW Bothell</option>
+          <option value="tacoma">UW Tacoma</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="ratings-heading">
+      <h2 id="ratings-heading" data-copy="ratings">Rate My Professors 评分</h2>
+      <div class="setting">
+        <div>
+          <label for="live-ratings" data-copy="live">启用 RMP 实时查询</label>
+          <p id="live-help" class="hint" data-copy="liveHelp">启用后，插件会向 Rate My Professors 发送教授姓名和 UW 校区来查询评分。结果缓存在本机。</p>
+        </div>
+        <input type="checkbox" role="switch" class="switch" id="live-ratings" aria-describedby="live-help">
+      </div>
+      <p class="hint fallback" data-copy="fallback">这是可选的实验性接入。RMP 不可用时仍可通过按钮打开原站，评分以原站为准。</p>
+      <div class="actions">
+        <button id="clear-cache" data-copy="clear" type="button">清除本机评分缓存</button>
+        <p id="status" role="status"></p>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="scripts/options.js"></script>
+</body>
+</html>

@@ -5,7 +5,17 @@ export const CAMPUSES: Record<Campus, { label: string; schoolId: string; schoolN
   tacoma: { label: "UW Tacoma", schoolId: "U2Nob29sLTQ3NDQ=", schoolNumber: 4744 },
 };
 
+export type CourseRating = {
+  code: string;
+  status: "available" | "unavailable";
+  rating: number | null;
+  difficulty: number | null;
+  count: number;
+  partial: boolean;
+};
+
 export type Professor = {
+  courseRating?: CourseRating;
   id: string;
   legacyId: number;
   firstName: string;
@@ -68,15 +78,16 @@ export function searchUrl(name: string, campus: Campus): string {
   return `https://www.ratemyprofessors.com/search/professors/${CAMPUSES[campus].schoolNumber}?q=${encodeURIComponent(name)}`;
 }
 
-export function validLookup(value: unknown): value is { name: string; campus: Campus } {
+export function validLookup(value: unknown): value is { name: string; campus: Campus; course?: string } {
   if (!value || typeof value !== "object") return false;
-  const v = value as { name?: unknown; campus?: unknown };
+  const v = value as { name?: unknown; campus?: unknown; course?: unknown };
   return typeof v.name === "string" && v.name.trim().length >= 3 && v.name.length <= 100 &&
-    !/[\u0000-\u001f]/.test(v.name) && typeof v.campus === "string" && Object.hasOwn(CAMPUSES, v.campus);
+    !/[\u0000-\u001f]/.test(v.name) && typeof v.campus === "string" && Object.hasOwn(CAMPUSES, v.campus) &&
+    (v.course === undefined || (typeof v.course === "string" && /^[A-Z&]{1,16}\d{3}[A-Z]?$/.test(v.course)));
 }
 
-export function cacheKey(name: string, campus: Campus): string {
-  return `rmp:v1:${campus}:${normalizeName(name)}`;
+export function cacheKey(name: string, campus: Campus, course?: string): string {
+  return `rmp:v1:${campus}:${normalizeName(name)}${course ? `:course-v2:${course}` : ""}`;
 }
 
 function score(value: unknown, max: number): number | null {
@@ -95,4 +106,10 @@ export function parseProfessor(raw: unknown): Professor | null {
     rating: score(p.avgRating, 5), difficulty: score(p.avgDifficulty, 5), wouldTakeAgain: score(p.wouldTakeAgainPercent, 100),
     ratingCount: typeof p.numRatings === "number" && Number.isSafeInteger(p.numRatings) && p.numRatings >= 0 ? p.numRatings : 0,
   };
+}
+
+export function ratingTone(value: number | null, difficulty = false): string {
+  if (value === null) return "missing";
+  if (difficulty) return value <= 2.5 ? "excellent" : value < 4 ? "average" : "poor";
+  return value >= 4 ? "excellent" : value >= 2.5 ? "average" : "poor";
 }

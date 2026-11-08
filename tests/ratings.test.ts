@@ -98,3 +98,62 @@ test("network bursts are bounded even when every requested name is different", a
   assert.equal(calls, 20);
   assert.equal(results.filter((r) => r.status === "unavailable").length, 10);
 });
+
+test("course averages include only exact course codes across pages and deduplicate reviews", async () => {
+  let calls = 0;
+  const lookup = createRatingProvider(memory(), async (_url, init) => {
+    const { variables } = JSON.parse(String(init?.body));
+    calls++;
+    if (variables.text) return response();
+    const rows = variables.after ? [
+      { id: "1", class: "CSE142", qualityRating: 5, difficultyRatingRounded: 2 },
+      { id: "3", class: "CSE 142", qualityRating: 3, difficultyRatingRounded: 4 },
+    ] : [
+      { id: "1", class: "CSE142", qualityRating: 5, difficultyRatingRounded: 2 },
+      { id: "2", class: "CSE142A", qualityRating: 1, difficultyRatingRounded: 5 },
+      { id: "4", class: "MATH142", qualityRating: 1, difficultyRatingRounded: 5 },
+      { id: "5", class: "CSE142", qualityRating: null, difficultyRatingRounded: 3 },
+    ];
+    return Response.json({ data: { node: { ratings: { edges: rows.map(node => ({ node })), pageInfo: { hasNextPage: !variables.after, endCursor: "page2" } } } } });
+  });
+  const [a, b] = await Promise.all([lookup("Alex Chen", "seattle", "CSE142"), lookup("Alex Chen", "seattle", "CSE142")]);
+  assert.deepEqual(a, b);
+  assert.equal(calls, 3);
+  assert.deepEqual(a.candidates[0].courseRating, { code: "CSE142", status: "available", rating: 4, difficulty: 3, count: 2, partial: false });
+  const other = await lookup("Alex Chen", "seattle", "CSE143");
+  assert.equal(other.candidates[0].courseRating?.count, 0);
+  assert.equal(other.candidates[0].courseRating?.rating, null);
+  assert.equal(other.candidates[0].rating, 4.6);
+});
+
+test("failed course requests preserve overall scores and retry after the short cache TTL", async () => {
+  let time = 1000, calls = 0;
+  const lookup = createRatingProvider(memory(), async (_url, init) => {
+    calls++;
+    const { variables } = JSON.parse(String(init?.body));
+    return variables.text ? response() : new Response("Forbidden", { status: 403 });
+  }, () => time);
+  const result = await lookup("Alex Chen", "seattle", "CSE142");
+  assert.equal(result.candidates[0].rating, 4.6);
+  assert.equal(result.candidates[0].courseRating?.status, "unavailable");
+  await lookup("Alex Chen", "seattle", "CSE142");
+  assert.equal(calls, 2);
+  time += 5 * 60_000 + 1;
+  await lookup("Alex Chen", "seattle", "CSE142");
+  assert.equal(calls, 4);
+});
+
+test("bounded review pagination explicitly marks incomplete course averages", async () => {
+  let page = 0;
+  const lookup = createRatingProvider(memory(), async (_url, init) => {
+    if (JSON.parse(String(init?.body)).variables.text) return response();
+    page++;
+    return Response.json({ data: { node: { ratings: { edges: [{ node: { id: String(page), class: "CSE142", qualityRating: 4, difficultyRatingRounded: 2 } }], pageInfo: { hasNextPage: true, endCursor: String(page) } } } } });
+  });
+  const result = await lookup("Alex Chen", "seattle", "CSE142");
+  assert.equal(page, 5);
+  assert.equal(result.candidates[0].courseRating?.partial, true);
+  assert.equal(result.candidates[0].courseRating?.count, 5);
+  assert.equal(validLookup({ name: "Alex Chen", campus: "seattle", course: "CSE142" }), true);
+  assert.equal(validLookup({ name: "Alex Chen", campus: "seattle", course: "CSE142 extra" }), false);
+});

@@ -1,1 +1,165 @@
-body{font:16px/1.7 system-ui,sans-serif;color:#172033;background:#faf9fd;margin:0}main{max-width:640px;margin:64px auto;padding:36px;background:white;border:1px solid #e8e1f0;border-radius:20px}h1{font-size:28px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:.15em;color:#6e3cb5}label{display:flex;gap:12px;align-items:center;padding:18px;background:#f4effb;border-radius:12px;font-weight:650}input{accent-color:#4b2e83}p{color:#586174}#status{color:#4b2e83}
+:root {
+  color-scheme: light;
+  --ink: #221a34;
+  --muted: #615871;
+  --purple: #4b2e83;
+  --purple-dark: #35215e;
+  --line: #e9e2f1;
+  --surface: #f7f4fb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: linear-gradient(155deg, #eee7f7, #faf8fd 38%, #f5f1fa);
+  font: 15px/1.55 system-ui, sans-serif;
+}
+
+main {
+  width: min(100% - 32px, 664px);
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px 16px;
+  margin-bottom: 24px;
+  padding: 24px;
+  color: #fff;
+  background: linear-gradient(125deg, #382267, #5f3e93);
+  border-radius: 20px;
+  box-shadow: 0 10px 26px #45277329;
+}
+
+.masthead img {
+  display: block;
+  border-radius: 12px;
+  background: #fff;
+}
+
+h1, h2, p { margin: 0; }
+h1 { font-size: clamp(22px, 5vw, 28px); line-height: 1.25; }
+h2 { margin: 0 0 12px; font-size: 17px; }
+.wordmark { margin-bottom: 4px; color: #eee3ff; font-size: 12px; font-weight: 700; }
+.intro { grid-column: 1 / -1; color: #f3edfb; font-size: 13px; }
+
+.card {
+  margin-bottom: 16px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 4px 16px #3822670b;
+}
+
+.setting {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px 18px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.setting + .setting { margin-top: 8px; }
+label { font-weight: 650; cursor: pointer; }
+.hint { margin-top: 4px; color: var(--muted); font-size: 13px; }
+.fallback { margin: 12px 2px 0; }
+
+button, select { font: inherit; }
+button, select, .switch { cursor: pointer; }
+button:focus-visible, select:focus-visible, .switch:focus-visible {
+  outline: 3px solid #8055bc;
+  outline-offset: 3px;
+}
+
+select {
+  appearance: none;
+  min-width: 144px;
+  min-height: 40px;
+  padding: 8px 34px 8px 12px;
+  border: 1px solid #d4c8e3;
+  border-radius: 9px;
+  color: var(--purple-dark);
+  background:
+    linear-gradient(45deg, transparent 50%, var(--purple) 50%) right 15px center / 5px 5px no-repeat,
+    linear-gradient(135deg, var(--purple) 50%, transparent 50%) right 10px center / 5px 5px no-repeat,
+    #fff;
+}
+
+select:hover { border-color: #9678ba; }
+
+.switch {
+  appearance: none;
+  display: grid;
+  align-items: center;
+  width: 46px;
+  height: 26px;
+  margin: 0;
+  padding: 3px;
+  border: 0;
+  border-radius: 20px;
+  background: #7a7186;
+  transition: background-color 150ms ease;
+}
+
+.switch::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px #21183240;
+  transition: transform 150ms ease;
+}
+
+.switch:checked { background: var(--purple); }
+.switch:checked::before { transform: translateX(20px); }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 16px;
+}
+
+button {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #d8c9ea;
+  border-radius: 9px;
+  color: var(--purple-dark);
+  background: #f1eaf9;
+  font-weight: 650;
+}
+
+button:hover { background: #e8ddf4; }
+button:active { background: #dfd0ef; }
+#status { flex: 1 1 220px; color: var(--purple-dark); font-size: 13px; }
+#status:empty { display: none; }
+
+@media (max-width: 440px) {
+  main { padding: 20px 0; }
+  .masthead, .card { padding: 16px; }
+  .setting:has(select) { grid-template-columns: 1fr; }
+  select { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch, .switch::before { transition: none; }
+}
+
+@media (forced-colors: active) {
+  select { appearance: auto; background: Canvas; }
+  .switch { appearance: auto; width: 20px; height: 20px; }
+  .switch::before { display: none; }
+}

@@ -19,7 +19,7 @@ assert.deepEqual(manifest.content_scripts.flatMap(script => script.matches), ["h
 assert.ok(!manifest.host_permissions?.length);
 assert.ok(!manifest.externally_connectable);
 
-const files = ["manifest.json", "options.html", "options.css", "scripts/background.js", "scripts/content.js", "scripts/options.js", ...new Set(Object.values(manifest.icons))].sort();
+const files = ["manifest.json", "options.html", "options.css", "scripts/background.js", "scripts/content.js", "scripts/options.js", "scripts/table.css", ...new Set(Object.values(manifest.icons))].sort();
 const actual = [];
 async function walk(relative = "") {
   for (const entry of await readdir(path.join(directory, relative), { withFileTypes: true })) {

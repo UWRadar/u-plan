@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, reply) => {
     const settings = await chrome.storage.local.get("liveRatingsEnabled");
     const permitted = await chrome.permissions.contains({ origins: ["https://www.ratemyprofessors.com/*"] });
     if (!settings.liveRatingsEnabled || !permitted) return reply({ status: "disabled", source: "rmp", candidates: [] });
-    reply(await lookup(msg.name, msg.campus));
+    reply(await lookup(msg.name, msg.campus, msg.course));
   })().catch(() => reply({ status: "unavailable", source: "rmp", candidates: [] }));
   return true;
 });

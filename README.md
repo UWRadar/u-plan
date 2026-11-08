@@ -30,7 +30,7 @@ bun run dev
 
 Open **http://127.0.0.1:3011/demo/**. The default preview uses fictional instructors, example ratings, and sample course reviews. It makes no AWS, Railway, or RMP requests.
 
-- Hover, click, or keyboard-focus the badge beside an instructor.
+- Click a rating to open its details, or focus it and press Enter.
 - Select a department when multiple people have the same name.
 - Switch between course reviews and professor ratings.
 - Try team-taught courses, a missing match, and different UW campuses.
@@ -55,8 +55,9 @@ The browser test covered the local mock with the actual compiled content script 
 ## Data, matching, and cost
 
 - The extension reads the course code and displayed instructor names. It does not read NetID credentials, authentication cookies, private plans, or student records.
-- Opt-in RMP requests include only a professor name and UW campus. No API credentials, proxies, tracking, or extra backend services are used.
-- Ratings are professor-wide, rather than specific to the displayed course or quarter. The card labels RMP as the source and links to the complete profile.
+- Opt-in RMP searches include a professor name and UW campus. Follow-up review requests use the matched public professor ID and pagination cursor. No API credentials, proxies, tracking, or extra backend services are used.
+- Inline cards show overall Rating, overall Difficulty, and a separate rating for the current course. Course ratings average matching RMP course-code records across terms and show their review count. Up to 500 professor reviews are read, with incomplete results labeled as partial data. Missing course reviews and failed requests have separate empty states.
+- Rating colors are green at 4–5, yellow at 2.5–<4, and red below 2.5. Difficulty reverses the scale, with green at 1–2.5, yellow above 2.5–<4, and red at 4–5. Missing values are gray.
 - Exact names are scoped to the selected campus. Duplicates and abbreviated first names require a user choice. Missing or unavailable results link to a school-scoped RMP search.
 - Successful matches cache for 24 hours; missing/failing responses for five minutes. Requests deduplicate and are limited to 20 new queries per minute per worker. The extension prunes expired cache entries and limits retained entries to 500.
 - RMP's external endpoint is experimental and can change. A failed request falls back to a source link; it does not attempt to bypass access controls.

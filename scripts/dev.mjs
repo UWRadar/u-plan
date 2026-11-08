@@ -22,10 +22,10 @@ const server = createServer(async (req, res) => {
     if (url.pathname === "/api/ratings") {
       const origin = req.headers.origin;
       if ((origin && !["http://127.0.0.1:3011", "http://localhost:3011"].includes(origin)) || req.headers["sec-fetch-site"] === "cross-site") { res.writeHead(403).end(); return; }
-      const query = { name: url.searchParams.get("name"), campus: url.searchParams.get("campus") };
+      const query = { name: url.searchParams.get("name"), campus: url.searchParams.get("campus"), course: url.searchParams.get("course") ?? undefined };
       if (req.method !== "GET" || !validLookup(query)) { res.writeHead(400).end("Invalid name or campus"); return; }
       res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
-      res.end(JSON.stringify(await lookup(query.name, query.campus))); return;
+      res.end(JSON.stringify(await lookup(query.name, query.campus, query.course))); return;
     }
     const relative = decodeURIComponent(url.pathname === "/" ? "/demo/" : url.pathname);
     const scope = ["demo", "dist-dev", "images"].find(folder => relative.startsWith(`/${folder}/`));
