@@ -21,7 +21,7 @@ bun audit
 bun run package:store
 ```
 
-The upload candidate is `artifacts/u-plan-2.0.0-store-candidate.zip`; a SHA-256 file is beside it. The ZIP has manifest.json at its root and contains only the ten production files. The packager rebuilds clean output, checks the permission scope, and rejects local demo fixtures, local server URLs and dynamic code execution. Production bundles exclude the fictional rating fixtures; `dist-dev/` retains the local preview.
+The upload candidate is `artifacts/u-plan-2.0.0-store-candidate.zip`; a SHA-256 file is beside it. The ZIP has manifest.json at its root and contains only the twelve production files. The packager rebuilds clean output, checks the permission scope, and rejects local demo fixtures, local server URLs and dynamic code execution. Production bundles exclude the fictional rating fixtures; `dist-dev/` retains the local preview.
 
 Never upload the repository, `dist-dev/`, demo pages, `.env` files, or database backups. To test unpacked, extract the candidate ZIP and select its folder in Chrome's Extensions page with Developer mode enabled.
 
@@ -37,6 +37,7 @@ Never upload the repository, `dist-dev/`, demo pages, `.env` files, or database 
 
 - Single purpose: show course and professor information while browsing UW MyPlan course details.
 - Content script: only `https://myplan.uw.edu/course/*`. It reads displayed course identifiers and instructor names; it does not read NetID passwords, authentication cookies, private plans or student records.
+- Content script on `https://uwclassmate.com/*`: active only when the club website is embedded in a frame, such as the course-review iframe. It opens sign-in links (`/sign-in`, `/sign-up`, `/api/auth/…`) in a new tab because UW NetID sign-in cannot load inside a frame. It reads no page content. This match adds a "Read and change your data on uwclassmate.com" install warning, so existing users must accept it on update.
 - `storage`: local campus/settings and bounded professor-result cache. Successful lookups last 24 hours, failures five minutes, at most 500 entries. No Chrome history permission is requested.
 - Optional `https://www.ratemyprofessors.com/*`: only requested when the user enables live ratings. The service worker sends public instructor names and selected UW campus/school to RMP without cookies or authorization tokens. New queries are limited to 20 per minute per worker and deduplicated.
 - Course-review iframe: a course-code URL on `https://uwclassmate.com/CourseDetail/…` loads the existing club website. That website has its own login, analytics and privacy behavior. The host and RMP receive ordinary network metadata such as IP address; avoid promising that no information ever leaves the device.
