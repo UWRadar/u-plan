@@ -55,6 +55,7 @@ The browser test covered the local mock with the actual compiled content script 
 ## Data, matching, and cost
 
 - The extension reads the course code and displayed instructor names. It does not read NetID credentials, authentication cookies, private plans, or student records.
+- UW NetID sign-in cannot load inside the course-review iframe, so a small script on embedded `uwclassmate.com` pages opens sign-in links in a new tab. It does nothing on pages opened directly.
 - Opt-in RMP searches include a professor name and UW campus. Follow-up review requests use the matched public professor ID and pagination cursor. No API credentials, proxies, tracking, or extra backend services are used.
 - Inline cards show overall Rating, overall Difficulty, and a separate rating for the current course. Course ratings average matching RMP course-code records across terms and show their review count. Up to 500 professor reviews are read, with incomplete results labeled as partial data. Missing course reviews and failed requests have separate empty states.
 - Rating colors are green at 4–5, yellow at 2.5–<4, and red below 2.5. Difficulty reverses the scale, with green at 1–2.5, yellow above 2.5–<4, and red at 4–5. Missing values are gray.

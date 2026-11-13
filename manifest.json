@@ -25,6 +25,16 @@
         "https://myplan.uw.edu/course/*"
       ],
       "run_at": "document_end"
+    },
+    {
+      "js": [
+        "scripts/course-frame.js"
+      ],
+      "matches": [
+        "https://uwclassmate.com/*"
+      ],
+      "all_frames": true,
+      "run_at": "document_start"
     }
   ]
 }
