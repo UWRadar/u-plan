@@ -15,11 +15,11 @@ assert.match(manifest.version, /^\d+(?:\.\d+){0,3}$/);
 assert.ok(manifest.version.split(".").every(n => Number(n) <= 65535));
 assert.deepEqual(manifest.permissions, ["storage"]);
 assert.deepEqual(manifest.optional_host_permissions, ["https://www.ratemyprofessors.com/*"]);
-assert.deepEqual(manifest.content_scripts.flatMap(script => script.matches), ["https://myplan.uw.edu/course/*"]);
+assert.deepEqual(manifest.content_scripts.flatMap(script => script.matches), ["https://myplan.uw.edu/course/*", "https://uwclassmate.com/*"]);
 assert.ok(!manifest.host_permissions?.length);
 assert.ok(!manifest.externally_connectable);
 
-const files = ["manifest.json", "options.html", "options.css", "scripts/background.js", "scripts/content.js", "scripts/options.js", "scripts/table.css", ...new Set(Object.values(manifest.icons))].sort();
+const files = ["manifest.json", "options.html", "options.css", "scripts/background.js", "scripts/content.js", "scripts/course-frame.js", "scripts/options.js", "scripts/table.css", ...new Set(Object.values(manifest.icons))].sort();
 const actual = [];
 async function walk(relative = "") {
   for (const entry of await readdir(path.join(directory, relative), { withFileTypes: true })) {

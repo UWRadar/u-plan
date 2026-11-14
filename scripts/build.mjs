@@ -10,6 +10,7 @@ export async function buildExtension() {
     await mkdir(`${base}/scripts`, { recursive: true });
     const settings = { bundle: true, target: "chrome120", platform: "browser", sourcemap: false, minify: !local, define: { __LOCAL_BUILD__: JSON.stringify(local) }, loader: { ".css": "text" } };
     await build({ ...settings, entryPoints: [`${root}/src/content.ts`], outfile: `${base}/scripts/content.js`, format: "iife" });
+    await build({ ...settings, entryPoints: [`${root}/src/course-frame.ts`], outfile: `${base}/scripts/course-frame.js`, format: "iife" });
     await build({ ...settings, entryPoints: { background: `${root}/src/background.ts`, options: `${root}/src/options.ts` }, outdir: `${base}/scripts`, format: "esm" });
     await cp(`${root}/src/table.css`, `${base}/scripts/table.css`);
     await cp(`${root}/images`, `${base}/images`, { recursive: true });
