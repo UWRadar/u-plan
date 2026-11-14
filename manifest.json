@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "U Plan by 华大课友",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "minimum_chrome_version": "120",
   "description": "在 UW MyPlan 中一起查看华大课友课程评价与教授评分。",
   "permissions": ["storage"],
